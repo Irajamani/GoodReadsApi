@@ -10,10 +10,13 @@
         <div class="container h-100">
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-10 col-md-8 col-lg-6">
+                    {% if message %}
+                    <h1>Username or Password is wrong. Please try again.</h1>
+                    {% endif %}
                     <!-- Form -->
                     <form class="form-example" action="" method="post">
-                        <h1>Bootstrap 4: Align Center</h1>
-                        <p class="description">A tutorial on how to align a "form" vertically and horizontally in Bootstrap 4.</p>
+                        <h1>Welcome to BookReview!!</h1>
+                        <p class="description">Please enter your login details.</p>
                         <!-- Input fields -->
                         <div class="form-group">
                             <label for="username">Username:</label>

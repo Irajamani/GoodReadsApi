@@ -7,9 +7,34 @@
         
     </head>
     <body>
-        <h1>Success!!</h1>
-        <p>Username is : {{username}}<br>
-            Password is : {{password}}
-        </p>
+        <div class="container h-100">
+            <div class="row h-100 justify-content-center align-items-center">
+                <div class="col-10 col-md-8 col-lg-6">
+                    {% if message %}
+                    <h1>Didnt type anything. Please try again.</h1>
+                    {% endif %}
+                    <!-- Form -->
+                    <form class="form-example" action="" method="post">
+                        <h3>Enter any one of the following to get more information.</h3>
+                        <!-- Input fields -->
+                        <div class="form-group">
+                            <label for="ISBN">ISBN Number</label>
+                            <input type="text" class="form-control username" id="ISBN" placeholder="ISBN Number..." name="isbn">
+                        </div>
+                        <div class="form-group">
+                            <label for="title">TITLE</label>
+                            <input type="text" class="form-control username" id="title" placeholder="Title" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="Author">Author of the book</label>
+                            <input type="text" class="form-control username" id="Author" name="author">
+                        </div>
+                        <button type="submit" formaction="{{url_for('search')}}" class="btn btn-primary" style="margin-left: 10px;">Search</button>
+                        <!-- End input fields -->
+                    </form>
+                    <!-- Form end -->
+                </div>
+            </div>
+        </div>
         </body>
 </html>

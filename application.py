@@ -22,16 +22,18 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():        
-    return render_template("index.html")
+    return render_template("index.html", message = False)
 
 @app.route("/success", methods=["POST"])
 def success():
     username = request.form["username"]
     password = request.form["password"]
     if db.execute("SELECT * FROM login WHERE username = :username and password = :password", {"username": username, "password": password}).rowcount == 0:
-        return render_template("error.html", message = "You dont seem to be registered with us.")
+        return render_template("index.html", message = True)
     else:
-        return render_template("success.html", username = username, password = password)
+        a = db.execute("SELECT id from login where username = :username", {"username" : username}).fetchone()
+        session["user_id"] = a.id
+        return render_template("success.html", message = False)
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -47,3 +49,22 @@ def validate():
         db.execute("INSERT INTO login (username, password) VALUES (:username, :password)", {"username":username, "password":password})
         db.commit()
         return render_template("success.html", username = username, password = password)
+
+@app.route("/search", methods = ["POST"])
+def search():
+    isbn = request.form["isbn"]
+    title = request.form["title"]
+    author = request.form["author"]
+    if isbn is None and title is None and author is None:
+        return render_template("success.html", message = True)
+    else:
+        if isbn is not None:
+            q = f"SELECT * FROM books WHERE idnumber LIKE '%{isbn}%'"
+            a = db.execute(q).fetchall()
+        elif title is not None:
+            q = f"SELECT * FROM books WHERE title LIKE '%{title}%'"
+            a = db.execute(q).fetchall()
+        elif author is not None:
+            q = f"SELECT * FROM books WHERE author LIKE '%{author}%'"
+            a = db.execute(q).fetchall()
+
