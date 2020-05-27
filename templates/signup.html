@@ -10,6 +10,9 @@
         <div class="container h-100">
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-10 col-md-8 col-lg-6">
+                    {% if message %}
+                        <p>Username already exists!!! Please try again.</p>
+                    {% endif %}
                     <!-- Form -->
                     <form class="form-example" action="" method="post">
                         <h1>Bootstrap 4: Align Center</h1>
@@ -23,8 +26,7 @@
                             <label for="password">Password:</label>
                             <input type="password" class="form-control password" id="password" placeholder="Password..." name="password">
                         </div>
-                        <button type="submit" formaction="{{url_for('success')}}" class="btn btn-primary" style="margin-left: 10px;">Login</button>
-                        <button type="submit" class="btn btn-primary" formaction="{{url_for('signup')}}" style="margin-left: 10px;">Sign up</button>
+                        <button type="submit" class="btn btn-primary" formaction="{{ url_for('validate')}}" style="margin-left: 10px;">Submit</button>
                         <!-- End input fields -->
                     </form>
                     <!-- Form end -->

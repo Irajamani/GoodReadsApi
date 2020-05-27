@@ -29,6 +29,21 @@ def success():
     username = request.form["username"]
     password = request.form["password"]
     if db.execute("SELECT * FROM login WHERE username = :username and password = :password", {"username": username, "password": password}).rowcount == 0:
-        return render_template("success.html", username = "Error", password = "Error")
+        return render_template("error.html", message = "You dont seem to be registered with us.")
     else:
+        return render_template("success.html", username = username, password = password)
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    return render_template("signup.html", message = False)
+
+@app.route("/validate", methods =["POST"])
+def validate():
+    username = request.form["username"]
+    password = request.form["password"]
+    if db.execute("SELECT * FROM login WHERE username = :username", {"username": username}).rowcount > 0:
+        return render_template("signup.html", message = True)
+    else:
+        db.execute("INSERT INTO login (username, password) VALUES (:username, :password)", {"username":username, "password":password})
+        db.commit()
         return render_template("success.html", username = username, password = password)
