@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, render_template
+from flask import Flask, session, render_template, request
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -21,9 +21,14 @@ db = scoped_session(sessionmaker(bind=engine))
 
 
 @app.route("/")
-def index():
+def index():        
     return render_template("index.html")
 
 @app.route("/success", methods=["POST"])
 def success():
-    return render_template("success.html")
+    username = request.form["username"]
+    password = request.form["password"]
+    if db.execute("SELECT * FROM login WHERE username = :username and password = :password", {"username": username, "password": password}).rowcount == 0:
+        return render_template("success.html", username = "Error", password = "Error")
+    else:
+        return render_template("success.html", username = username, password = password)
