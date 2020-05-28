@@ -78,4 +78,16 @@ def specific(number):
     details = goodreads.json()
     avgrating = details['books'][0]['average_rating']
     norating = details['books'][0]['work_ratings_count']
-    return render_template("specific.html", book = a, avgrating = avgrating, norating = norating)
+    userid = session["user_id"]
+    temp = db.execute("SELECT * FROM reviews where id = :userid and idnumber = :number", {"userid" : userid, "number":number})
+    isreviewed = temp.rowcount > 0
+    if isreviewed:
+        review = temp.review
+    else:
+        return render_template("specific.html", book = a, avgrating = avgrating, norating = norating, message = False)
+
+@app.route('/addreview')
+def addreview():
+    radio = request.form["contact"]
+    review = request.form["rev"]
+    db.execute("INSERT INTO review")

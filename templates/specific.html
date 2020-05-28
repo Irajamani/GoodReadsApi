@@ -28,5 +28,49 @@
                 Number of ratings : {{ norating }}
             </li>
             </ul>
+            <p>
+                {% if message %}
+                <h3>Your ratings</h3><br>
+                {{ review }}
+                {{ stars }}
+                {% else %}
+                <h2>Please enter your review!!</h2>
+                <form class="form-example" action="" method="post">
+                    <!-- Input fields -->
+                    <h4>Your rating out of 5.</h4>
+                    <div>
+                        <input type="radio" id="contactChoice1"
+                         name="contact" value="email">
+                        <label for="contactChoice1">1</label>
+                    
+                        <input type="radio" id="contactChoice2"
+                             name="contact" value="phone">
+                        <label for="contactChoice2">2</label>
+                        
+                        <input type="radio" id="contactChoice3"
+                             name="contact" value="mail">
+                        <label for="contactChoice3">3</label>
+                        
+                        <input type="radio" id="contactChoice4"
+                             name="contact" value="mail">
+                        <label for="contactChoice4">4</label>
+
+                        <input type="radio" id="contactChoice5"
+                             name="contact" value="mail">
+                        <label for="contactChoice5">5</label>
+                    </div>
+                    <div class = "form-group w-50">
+                        <label for="review">Your review</label>
+                        <textarea name="rev" class="form-control" id="review" rows="3" cols="6"></textarea>
+
+                    </div>
+                    
+                        <div>
+                            <button type="submit" formaction="{{ url_for('addreview')">Submit</button>
+                        </div>
+                </form>
+                <!-- Form end -->
+                {% endif %}
+            </p>
         </body>
         </html>
