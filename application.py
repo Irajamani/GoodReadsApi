@@ -1,5 +1,5 @@
 import os
-
+import requests
 from flask import Flask, session, render_template, request
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -48,7 +48,7 @@ def validate():
     else:
         db.execute("INSERT INTO login (username, password) VALUES (:username, :password)", {"username":username, "password":password})
         db.commit()
-        return render_template("success.html", username = username, password = password)
+        return render_template("success.html")
 
 @app.route("/search", methods = ["POST"])
 def search():
@@ -58,13 +58,24 @@ def search():
     if isbn is None and title is None and author is None:
         return render_template("success.html", message = True)
     else:
-        if isbn is not None:
+        if len(isbn) > 0:
             q = f"SELECT * FROM books WHERE idnumber LIKE '%{isbn}%'"
             a = db.execute(q).fetchall()
-        elif title is not None:
+            return render_template("search.html", a = a, isbn = len(isbn))
+        elif len(title) > 0:
             q = f"SELECT * FROM books WHERE title LIKE '%{title}%'"
             a = db.execute(q).fetchall()
-        elif author is not None:
+            return render_template("search.html", a = a, isbn = "2")
+        elif len(author) > 0:
             q = f"SELECT * FROM books WHERE author LIKE '%{author}%'"
             a = db.execute(q).fetchall()
-
+            return render_template("search.html", a = a, isbn = "3")
+        
+@app.route("/specific/<string:number>")
+def specific(number):
+    a = db.execute("SELECT * FROM books where idnumber = :number", {"number" : number}).fetchone()
+    goodreads = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "XwYQWnjwXud2OwR7fELZg", "isbns":a.idnumber})
+    details = goodreads.json()
+    avgrating = details['books'][0]['average_rating']
+    norating = details['books'][0]['work_ratings_count']
+    return render_template("specific.html", book = a, avgrating = avgrating, norating = norating)
